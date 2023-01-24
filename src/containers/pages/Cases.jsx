@@ -1,16 +1,18 @@
-import Header from "../../components/home/Header"
 import Footer from "../../components/navigation/Footer"
 import Nabvar from "../../components/navigation/Navbar"
 import Layout from "../../hocs/layouts/Layout"
+import Header from "../../components/cases/Header"
+import CaseList from "../../components/cases/CaseList"
 
-function Home() {
+function Cases() {
     return (
         <Layout >
             <Nabvar/>
-            <Header/>
+            <Header></Header>
+            <CaseList/>
             <Footer/>
         </Layout>
     )
 }
 
-export default Home
+export default Cases
