@@ -6,7 +6,7 @@ from rest_framework import permissions
 from apps.blog.models import Post, ViewCount
 from apps.category.models import Category
 from apps.blog.serializers import PostListSerializer, PostSerializer
-from apps.blog.pagination import SmallSetPagination
+from apps.blog.pagination import SmallSetPagination, LargeSetPagination
 
 from django.db.models.query_utils import Q
 
@@ -30,12 +30,12 @@ class PostListView(APIView):
 
 
 class PostsListByCategoryView(APIView):
+    print('ACA!!!')
     permission_classes = (permissions.AllowAny,)
     def get(self, request, format=None):
-        category_slug = request.query_params.get('category_slug')
-
+        category_slug = request.query_params.get('slug')
         if Post.objects.all().exists():
-            category_slug = request.query_params.get('category_slug')
+            # category_slug = request.query_params.get('slug')
             category = Category.objects.filter(slug__exact=category_slug).first()
             if category == None:
                 return Response({'error':'Category does not exist'}, status=status.HTTP_404_NOT_FOUND)
@@ -127,9 +127,9 @@ class PostSearchView(APIView):
         
         posts = Post.objects.all()
 
-        # paginator = SmallSetPagination()
-        # results = paginator.paginate_queryset(posts, request)
-        serializers = PostListSerializer(matches, many=True)
+        paginator = LargeSetPagination()
+        results = paginator.paginate_queryset(matches, request)
+        serializers = PostListSerializer(results, many=True)
 
-        return Response({'posts': serializers.data}, status=status.HTTP_200_OK)
-        # return paginator.get_paginated_response({'posts': posts_serializers.data})
+        # return Response({'posts': serializers.data}, status=status.HTTP_200_OK)
+        return paginator.get_paginated_response({'filtered_posts': serializers.data})

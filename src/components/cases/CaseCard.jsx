@@ -20,7 +20,7 @@ function CaseCard({ data, index }) {
 
       className="flex flex-col overflow-hidden  rounded-lg shadow-lg">
 
-      <div class="flex-shrink-0">
+      <div className="flex-shrink-0">
         <img id={data.id} className="h-96 w-full transition duration-400 ease-in-out object-cover" src={data.imageUrl} alt="" />
 
       </div>
