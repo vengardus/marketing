@@ -17,7 +17,7 @@ class PostListView(APIView):
 
     def get(self, request, format=None):
         if not Post.objects.exists():
-            return Response({'error': 'Not found post'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Not found post'}, status=status.HTTP_204_NO_CONTENT)
         
         posts = Post.objects.all()
 
@@ -38,7 +38,7 @@ class PostsListByCategoryView(APIView):
             # category_slug = request.query_params.get('slug')
             category = Category.objects.filter(slug__exact=category_slug).first()
             if category == None:
-                return Response({'error':'Category does not exist'}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'error':'Category does not exist'}, status=status.HTTP_204_NO_CONTENT)
 
             posts = Post.objects.order_by('-published').all()
 
@@ -74,7 +74,7 @@ class PostsListByCategoryView(APIView):
 
             return paginator.get_paginated_response({'posts': serializer.data})
         else:
-            return Response({'error':'No posts found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error':'No posts found'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class PostDetailView(APIView):
@@ -84,7 +84,7 @@ class PostDetailView(APIView):
         post = Post.objects.filter(slug__exact=slug).first()
 
         if post == None:
-            return Response({'error': 'Not found post'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Not found post'}, status=status.HTTP_204_NO_CONTENT)
         
         serializer = PostSerializer(post)
 
@@ -123,11 +123,11 @@ class PostSearchView(APIView):
         )
 
         if not matches.exists():
-            return Response({'error': 'Not found posts'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Not found posts'}, status=status.HTTP_204_NO_CONTENT)
         
         posts = Post.objects.all()
 
-        paginator = LargeSetPagination()
+        paginator = SmallSetPagination()
         results = paginator.paginate_queryset(matches, request)
         serializers = PostListSerializer(results, many=True)
 
