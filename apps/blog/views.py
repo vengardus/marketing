@@ -30,7 +30,6 @@ class PostListView(APIView):
 
 
 class PostsListByCategoryView(APIView):
-    print('ACA!!!')
     permission_classes = (permissions.AllowAny,)
     def get(self, request, format=None):
         category_slug = request.query_params.get('slug')
@@ -94,7 +93,6 @@ class PostDetailView(APIView):
         else:
             ip = request.META.get('REMOTE_ADDR')
 
-        print('post', post.views)
         if not ViewCount.objects.filter(post=post, ip_address=ip):
             view = ViewCount(post=post, ip_address=ip)
             view.save()
@@ -105,7 +103,7 @@ class PostDetailView(APIView):
         # results = paginator.paginate_queryset(posts, request)
         # posts_serializers = PostListSerializer(results, many=True)
 
-        return Response({'succes': serializer.data}, status=status.HTTP_200_OK)
+        return Response({'post': serializer.data}, status=status.HTTP_200_OK)
         # return Response({'posts': posts_serializers.data}, status=status.HTTP_200_OK)
         # return paginator.get_paginated_response({'posts': posts_serializers.data})
 

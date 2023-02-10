@@ -4,7 +4,7 @@ from apps.category.serializers import CategorySerializer
 
 
 class PostSerializer(serializers.ModelSerializer):
-    #category=CategorySerializer()
+    category=CategorySerializer()
     class Meta: 
         model=Post
         fields=[

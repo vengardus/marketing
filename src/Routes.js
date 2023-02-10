@@ -11,7 +11,7 @@ import Category from '../src/containers/pages/Category';
 import Search from '../src/containers/pages/Search';
 // import Careers from '../src/containers/pages/Careers';
 // import Contact from '../src/containers/pages/Contact';
-// import PostDetail from '../src/containers/pages/PostDetail';
+import PostDetail from '../src/containers/pages/PostDetail';
 
 
 function AnimatedRoutes() {
@@ -31,7 +31,7 @@ function AnimatedRoutes() {
         <Route path="/nosotros" element={<About />} />
         {/* <Route path="/carreras" element={<Careers />} /> */}
         <Route path="/blog" element={<Blog />} />
-        {/* <Route path="/blog/:slug" element={<PostDetail />} /> */}
+        <Route path="/blog/:slug" element={<PostDetail />} />
         <Route path="/s/:term" element={<Search />} />
         <Route path="/category/:slug" element={<Category />} />
         {/* <Route path="/contacto" element={<Contact />} /> */}

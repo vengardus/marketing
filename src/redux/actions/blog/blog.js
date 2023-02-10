@@ -79,6 +79,7 @@ export const get_blog_list_category = (slug) => async dispatch => {
   try {
 
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/blog/bycategory?slug=${slug}`, config)
+    console.log('RES', res)
 
     if (res.status === 200) {
       dispatch({
@@ -108,7 +109,6 @@ export const get_blog_list_category_page = (slug, page) => async dispatch => {
   try {
 
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/blog/by_category?slug=${slug}&p=${page}`, config)
-
     if (res.status === 200) {
       dispatch({
         type: GET_BLOG_LIST_CATEGORIES_SUCCESS,
@@ -138,6 +138,7 @@ export const get_blog = (slug) => async dispatch => {
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/blog/detail/${slug}`, config);
 
     if (res.status === 200) {
+      console.log('DATA',res.data)
       dispatch({
         type: GET_BLOG_SUCCESS,
         payload: res.data

@@ -25,7 +25,7 @@ function BlogCard({ post, index }) {
           <div className="lg:flex min-w-0 lg:flex-1 items-center">
             <figure className="lg:flex-shrink-0">
               <img id={index} className="h-64 lg:w-96 w-full object-cover rounded" 
-                src='https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80' 
+                src={`${process.env.REACT_APP_API_URL}/${decodeURI(post.thumbnail)}`}
                 alt={decodeURI(post.thumbnail)} 
               />
             </figure>
