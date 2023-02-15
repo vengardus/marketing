@@ -1,0 +1,12 @@
+import LayoutSidebar from "../../hocs/layouts/LayoutSidebar"
+
+
+function Page_1() {
+    return (
+        <LayoutSidebar>
+            Page_1
+        </LayoutSidebar>
+    )
+}
+
+export default Dashboard
