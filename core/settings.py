@@ -25,6 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
+# DOMAIN
+DOMAIN=os.environ.get('DOMAIN')
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
@@ -47,7 +50,8 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     'apps.blog',
-    'apps.category'
+    'apps.category',
+    'apps.user'
 ]
 
 THIRD_PARTY_APPS = [
@@ -55,6 +59,10 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'ckeditor',
     'ckeditor_uploader',
+    'djoser',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    'social_django'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -126,6 +134,14 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    # 'django.contrib.auth.hashers.ScryptPasswordHasher',
+]
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -179,10 +195,43 @@ REST_FRAMEWORK = {
     ]
 }
 
+AUTH_USER_MODEL = 'user.UserAccount'
+
 CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST_DEV')
 CORS_TRUSTED_ORIGINS = env.list('CORS_TRUSTED_ORIGINS_DEv')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+
+    'SEND_CONFIRMATION_EMAIL': True,
+    'SEND_ACTIVATION_EMAIL': True,
+
+    'SET_USERNAME_RETYPE': True,
+    'SET_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+
+    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000/google', 'http://localhost:8000/facebook'],
+
+    'SERIALIZERS': {
+        'user_create': 'apps.user.serializers.UserSerializer',
+        'user': 'apps.user.serializers.UserSerializer',
+        'current_user': 'apps.user.serializers.UserSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    },
+}
+
 
 if not DEBUG:
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS_DEPLOY')

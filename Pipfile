@@ -12,6 +12,10 @@ pillow = "==9.4.0"
 django-storages = "==1.13.2"
 django-ckeditor = "==6.5.1"
 psycopg2 = "==2.9.5"
+djoser = "*"
+djangorestframework-simplejwt = "*"
+social-auth-app-django = "*"
+argon2-cffi = "*"
 
 [dev-packages]
 autopep8 = "*"
