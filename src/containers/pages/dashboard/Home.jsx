@@ -1,16 +1,40 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux"
 import { LockClosedIcon } from '@heroicons/react/20/solid'
-
+import {login} from './../../../redux/actions/auth/auth'
 
 function Home({
-  nothing,
+  login,
+  isAuthenticated,
+  loading
 }) {
 
   useEffect(() => {
     window.scrollTo(0, 0)
 
   }, [])
+
+  const [formData, setFormData] = useState({
+    email:'',
+    password:''
+  })
+
+  const {
+    email, 
+    password
+   } = formData
+
+  const onChange = e => setFormData({
+    ...formData,
+    [e.target.name]: e.target.value
+  })
+
+  const onSubmit = e => {
+    e.preventDefault()
+    console.log(formData)
+    login(email, password)
+  }
+
 
   return (
     // <Layout>
@@ -38,7 +62,9 @@ function Home({
             </h2>
           
           </div>
-          <form className="mt-8 space-y-6" action="#" method="POST">
+          <form 
+            onSubmit={e=> onSubmit(e)}
+            className="mt-8 space-y-6" action="#" method="POST">
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="-space-y-px rounded-md shadow-sm">
               <div>
@@ -48,6 +74,8 @@ function Home({
                 <input
                   id="email-address"
                   name="email"
+                  value={email}
+                  onChange={e=>onChange(e)}
                   type="email"
                   autoComplete="email"
                   required
@@ -62,6 +90,8 @@ function Home({
                 <input
                   id="password"
                   name="password"
+                  value={password}
+                  onChange={e=>onChange(e)}
                   type="password"
                   autoComplete="current-password"
                   required
@@ -113,10 +143,11 @@ function Home({
 
 
 const mapStateToProps = state => ({
-
+  isAuthenticated: state.auth.isAuthenticated,
+  loading: state.auth.loading
 })
 
 
 export default connect(mapStateToProps, {
-
+  login
 })(Home)
