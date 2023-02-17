@@ -1,17 +1,30 @@
 import { useEffect, useState } from "react";
 import { connect } from "react-redux"
 import { LockClosedIcon } from '@heroicons/react/20/solid'
-import {login} from './../../../redux/actions/auth/auth'
+import { Navigate } from "react-router-dom";
+import {
+  login, check_authenticated, 
+  refresh, load_user
+} from './../../../redux/actions/auth/auth'
+
 
 function Home({
   login,
   isAuthenticated,
-  loading
+  loading,
+  refresh,
+  check_authenticated,
+  load_user
 }) {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-
+    isAuthenticated ? <></>:
+      <>
+      {refresh()}
+      {check_authenticated()}
+      {load_user()}
+      </>
   }, [])
 
   const [formData, setFormData] = useState({
@@ -35,6 +48,11 @@ function Home({
     login(email, password)
   }
 
+  console.log('isAuthenticated', isAuthenticated)
+
+  if(isAuthenticated){
+    return <Navigate to='/dashboard'/>
+  } 
 
   return (
     // <Layout>
@@ -149,5 +167,8 @@ const mapStateToProps = state => ({
 
 
 export default connect(mapStateToProps, {
-  login
+  login,
+  refresh,
+  check_authenticated,
+  load_user,
 })(Home)

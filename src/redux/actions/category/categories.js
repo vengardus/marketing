@@ -5,7 +5,7 @@ import {
 } from './types'
 
 
-export const get_categories = () => async disptach => {
+export const get_categories = () => async dispatch => {
     const config = {
         headers: {
             'Accept' : 'application/json'
@@ -17,19 +17,19 @@ export const get_categories = () => async disptach => {
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/${route}`, config)
 
         if (res.status === 200) {
-            disptach({
+            dispatch({
                 type: GET_CATEGORIES_SUCCESS,
                 payload: res.data
             })
         }
         else {
-            disptach({
+            dispatch({
                 type: GET_CATEGORIES_FAIL
             })       
         }
     }
     catch (err) {
-        disptach({
+        dispatch({
             type: GET_CATEGORIES_FAIL
         })       
     }

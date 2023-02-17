@@ -42,7 +42,7 @@ import {
                     type: USER_LOADED_SUCCESS,
                     payload: res.data
                 });
-                console.log('Logeado!!!!')
+                console.log('Logeado!!!!', res.data)
             } else {
                 dispatch({
                     type: USER_LOADED_FAIL
@@ -60,8 +60,8 @@ import {
     }
   };
 
-export const login = (email, password) => async disptach => {
-  disptach({
+export const login = (email, password) => async dispatch => {
+  dispatch({
     type: SET_AUTH_LOADING
   })
 
@@ -85,37 +85,37 @@ export const login = (email, password) => async disptach => {
     const res = await axios.post(`${process.env.REACT_APP_API_URL}/${route}`, body, config)
 
     if (res.status === 200) {
-      disptach({
+      dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data
       })
 
-      disptach(load_user())
+      dispatch(load_user())
 
-      disptach({
+      dispatch({
         type: REMOVE_AUTH_LOADING,
       })
     }
     else {
-      disptach({
+      dispatch({
         type: LOGIN_FAIL
       })
-      disptach({
+      dispatch({
         type: REMOVE_AUTH_LOADING,
       })
     }
   }
   catch (err) {
-    disptach({
+    dispatch({
       type: LOGIN_FAIL
     })
-    disptach({
+    dispatch({
       type: REMOVE_AUTH_LOADING,
     })
   }
 }
 
-export const check_authenticated = () => async disptach => {
+export const check_authenticated = () => async dispatch => {
   if (localStorage.getItem('access')) {
     const config = {
       headers: {
@@ -135,31 +135,31 @@ export const check_authenticated = () => async disptach => {
       console.log(`${process.env.REACT_APP_API_URL}/${route}`)
 
       if (res.status === 200) {
-        disptach({
+        dispatch({
           type: AUTHENTICATED_SUCCESS,
         })
       }
       else {
-        disptach({
+        dispatch({
           type: AUTHENTICATED_FAIL
         })
       }
     }
     catch (err) {
-      disptach({
+      dispatch({
         type: AUTHENTICATED_FAIL
       })
     }
 
   }
   else {
-    disptach({
+    dispatch({
       type: AUTHENTICATED_FAIL
     })
   }
 }
 
-export const refresh = () => async disptach => {
+export const refresh = () => async dispatch => {
   if (localStorage.getItem('refresh')) {
     const config = {
       headers: {
@@ -179,31 +179,31 @@ export const refresh = () => async disptach => {
       console.log(`${process.env.REACT_APP_API_URL}/${route}`)
 
       if (res.status === 200) {
-        disptach({
+        dispatch({
           type: REFRESH_SUCCESS,
         })
       }
       else {
-        disptach({
+        dispatch({
           type: REFRESH_FAIL
         })
       }
     }
     catch (err) {
-      disptach({
+      dispatch({
         type: REFRESH_FAIL
       })
     }
 
   }
   else {
-    disptach({
+    dispatch({
       type: REFRESH_FAIL
     })
   }
 }
 
-export const reset_password = (email) => async disptach => {
+export const reset_password = (email) => async dispatch => {
 
   const config = {
     headers: {
@@ -222,28 +222,28 @@ export const reset_password = (email) => async disptach => {
     console.log(`${process.env.REACT_APP_API_URL}/${route}`)
 
     if (res.status === 204) {
-      disptach({
+      dispatch({
         type: RESET_PASSWORD_SUCCESS,
       })
-      disptach({
+      dispatch({
         type: REMOVE_AUTH_LOADING,
       })
 
     }
     else {
-      disptach({
+      dispatch({
         type: RESET_PASSWORD_FAIL
       })
-      disptach({
+      dispatch({
         type: REMOVE_AUTH_LOADING
       })
     }
   }
   catch (err) {
-    disptach({
+    dispatch({
       type: RESET_PASSWORD_FAIL
     })
-    disptach({
+    dispatch({
       type: REMOVE_AUTH_LOADING
     })
   }
@@ -251,9 +251,9 @@ export const reset_password = (email) => async disptach => {
 
 }
 
-export const reset_password_confirm = (uid, token, new_password, re_new_password) => async disptach => {
+export const reset_password_confirm = (uid, token, new_password, re_new_password) => async dispatch => {
 
-  disptach({
+  dispatch({
     type: SET_AUTH_LOADING,
   })
 
@@ -272,10 +272,10 @@ export const reset_password_confirm = (uid, token, new_password, re_new_password
   })
 
   if (new_password !== re_new_password) {
-    disptach({
+    dispatch({
       type: RESET_PASSWORD_CONFIRM_FAIL,
     })
-    disptach({
+    dispatch({
       type: REMOVE_AUTH_LOADING,
     })
   }
@@ -288,28 +288,28 @@ export const reset_password_confirm = (uid, token, new_password, re_new_password
       console.log(`${process.env.REACT_APP_API_URL}/${route}`)
 
       if (res.status === 204) {
-        disptach({
+        dispatch({
           type: RESET_PASSWORD_CONFIRM_SUCCESS,
         })
-        disptach({
+        dispatch({
           type: REMOVE_AUTH_LOADING,
         })
 
       }
       else {
-        disptach({
+        dispatch({
           type: RESET_PASSWORD_CONFIRM_FAIL
         })
-        disptach({
+        dispatch({
           type: REMOVE_AUTH_LOADING
         })
       }
     }
     catch (err) {
-      disptach({
+      dispatch({
         type: RESET_PASSWORD_CONFIRM_FAIL
       })
-      disptach({
+      dispatch({
         type: REMOVE_AUTH_LOADING
       })
     }
