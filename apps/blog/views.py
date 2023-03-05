@@ -131,3 +131,24 @@ class PostSearchView(APIView):
 
         # return Response({'posts': serializers.data}, status=status.HTTP_200_OK)
         return paginator.get_paginated_response({'filtered_posts': serializers.data})
+
+# Post By Author
+class AuthorPostListView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, format=None):
+        user = self.request.user
+        print('AuthorPostListView-prev', request.user)
+
+        if not Post.objects.filter(author=user).exists():
+            return Response({'error': 'Not found post'}, status=status.HTTP_204_NO_CONTENT)
+        
+        print('AuthorPostListView', request)
+        posts = Post.objects.filter(author=user)
+
+        paginator = SmallSetPagination()
+        results = paginator.paginate_queryset(posts, request)
+        posts_serializers = PostListSerializer(results, many=True)
+
+        # return Response({'posts': posts_serializers.data}, status=status.HTTP_200_OK)
+        return paginator.get_paginated_response({'posts': posts_serializers.data})

@@ -8,14 +8,13 @@ import BlogList from "../../components/blog/BlogLIst";
 import CategoriesHeader  from "../../components/blog/CategoriesHeader";
 
 import { get_categories } from "../../redux/actions/category/categories";
-import { get_blog_list, get_blog_list_page } from "../../redux/actions/blog/blog"
+import { get_blog_list } from "../../redux/actions/blog/blog"
 
-
+//
 function Blog({
     get_categories,
     categories,
     get_blog_list,
-    get_blog_list_page,
     posts,
     count,
     next,
@@ -37,7 +36,7 @@ function Blog({
             <div className="pt-28">
                 <div className="mt-10">
                     <CategoriesHeader categories={categories&&categories}/>
-                    <BlogList posts={posts} get_blog_list_page={get_blog_list_page} count={count&&count}/>
+                    <BlogList posts={posts} get_blog_list_page={get_blog_list} count={count&&count}/>
                 </div>
             </div>
             <Footer/>
@@ -57,5 +56,4 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, {
     get_categories,
     get_blog_list,
-    get_blog_list_page
 }) (Blog)

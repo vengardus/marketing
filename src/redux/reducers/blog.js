@@ -6,7 +6,10 @@ import {
     GET_BLOG_LIST_CATEGORIES_SUCCESS,
     GET_BLOG_LIST_CATEGORIES_FAIL,
     GET_SEARCH_BLOG_SUCCESS,
-    GET_SEARCH_BLOG_FAIL
+    GET_SEARCH_BLOG_FAIL,
+
+    GET_AUTHOR_BLOG_LIST_SUCCESS,
+    GET_AUTHOR_BLOG_LIST_FAIL
 } from '../../redux/actions/blog/types';
 
 
@@ -41,6 +44,7 @@ export default function blog(state = initialState, action) {
                 previous: null,
             }
         case GET_BLOG_LIST_SUCCESS:
+        case GET_AUTHOR_BLOG_LIST_SUCCESS:
             return {
                 ...state,
                 blog_list: payload.results.posts,
@@ -49,6 +53,7 @@ export default function blog(state = initialState, action) {
                 previous: payload.previous,
             }
         case GET_BLOG_LIST_FAIL:
+        case GET_AUTHOR_BLOG_LIST_FAIL:
             return {
                 ...state,
                 blog_list: null,

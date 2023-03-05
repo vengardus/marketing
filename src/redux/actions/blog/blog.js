@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { get_axios } from '../../../lib/axios';
 import {
   GET_BLOG_LIST_SUCCESS,
   GET_BLOG_LIST_FAIL,
@@ -7,155 +8,59 @@ import {
   GET_BLOG_LIST_CATEGORIES_SUCCESS,
   GET_BLOG_LIST_CATEGORIES_FAIL,
   GET_SEARCH_BLOG_SUCCESS,
-  GET_SEARCH_BLOG_FAIL
+  GET_SEARCH_BLOG_FAIL,
+
+  GET_AUTHOR_BLOG_LIST_SUCCESS,
+  GET_AUTHOR_BLOG_LIST_FAIL,
 } from "./types"
 
-export const get_blog_list = () => async dispatch => {
+
+export const get_blog_list = (page=null) => {
+  const api_url = (page===null)?
+    `${process.env.REACT_APP_API_URL}/api/blog/list`:
+    `${process.env.REACT_APP_API_URL}/api/blog/list?p=${page}`
+
   const config = {
     headers: {
       'Accept': 'application/json'
     }
   };
 
-  try {
-
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/blog/list`, config)
-
-    if (res.status === 200) {
-      console.log('1)', res.data)
-      dispatch({
-        type: GET_BLOG_LIST_SUCCESS,
-        payload: res.data
-      });
-    } else {
-      dispatch({
-        type: GET_BLOG_LIST_FAIL
-      });
-    }
-
-  } catch (err) {
-    dispatch({
-      type: GET_BLOG_LIST_FAIL
-    });
-  }
+  return get_axios(api_url, config, GET_BLOG_LIST_SUCCESS, GET_BLOG_LIST_FAIL)
 }
 
-export const get_blog_list_page = (page) => async dispatch => {
+
+export const get_blog_list_category = (slug, page=null) => {
+  const api_url = (page===null)?
+    `${process.env.REACT_APP_API_URL}/api/blog/bycategory?slug=${slug}` :
+    `${process.env.REACT_APP_API_URL}/api/blog/by_category?slug=${slug}&p=${page}`
+
   const config = {
     headers: {
       'Accept': 'application/json'
     }
   };
 
-  try {
-
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/blog/list?p=${page}`, config)
-
-    if (res.status === 200) {
-      dispatch({
-        type: GET_BLOG_LIST_SUCCESS,
-        payload: res.data
-      });
-    } else {
-      dispatch({
-        type: GET_BLOG_LIST_FAIL
-      });
-    }
-
-  } catch (err) {
-    dispatch({
-      type: GET_BLOG_LIST_FAIL
-    });
-  }
+  return get_axios(api_url, config, GET_BLOG_LIST_CATEGORIES_SUCCESS, GET_BLOG_LIST_CATEGORIES_FAIL)
 }
 
-export const get_blog_list_category = (slug) => async dispatch => {
+
+export const get_blog = (slug) => {
+  const api_url = `${process.env.REACT_APP_API_URL}/api/blog/detail/${slug}`
+
   const config = {
     headers: {
       'Accept': 'application/json'
     }
   };
 
-  try {
-
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/blog/bycategory?slug=${slug}`, config)
-    console.log('RES', res)
-
-    if (res.status === 200) {
-      dispatch({
-        type: GET_BLOG_LIST_CATEGORIES_SUCCESS,
-        payload: res.data
-      });
-    } else {
-      dispatch({
-        type: GET_BLOG_LIST_CATEGORIES_FAIL
-      });
-    }
-
-  } catch (err) {
-    dispatch({
-      type: GET_BLOG_LIST_CATEGORIES_FAIL
-    });
-  }
+  return get_axios(api_url, config, GET_BLOG_SUCCESS, GET_BLOG_FAIL)
 }
 
-export const get_blog_list_category_page = (slug, page) => async dispatch => {
-  const config = {
-    headers: {
-      'Accept': 'application/json'
-    }
-  };
-
-  try {
-
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/blog/by_category?slug=${slug}&p=${page}`, config)
-    if (res.status === 200) {
-      dispatch({
-        type: GET_BLOG_LIST_CATEGORIES_SUCCESS,
-        payload: res.data
-      });
-    } else {
-      dispatch({
-        type: GET_BLOG_LIST_CATEGORIES_FAIL
-      });
-    }
-
-  } catch (err) {
-    dispatch({
-      type: GET_BLOG_LIST_CATEGORIES_FAIL
-    });
-  }
-}
-
-export const get_blog = (slug) => async dispatch => {
-  const config = {
-    headers: {
-      'Accept': 'application/json'
-    }
-  };
-
-  try {
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/blog/detail/${slug}`, config);
-
-    if (res.status === 200) {
-      console.log('DATA',res.data)
-      dispatch({
-        type: GET_BLOG_SUCCESS,
-        payload: res.data
-      });
-    } else {
-      dispatch({
-        type: GET_BLOG_FAIL
-      });
-    }
-  } catch (err) {
-    dispatch({
-      type: GET_BLOG_FAIL
-    });
-  }
-}
-
-export const search_blog = (search_term) => async dispatch => {
+export const search_blog = (search_term, page=null) => {
+  const api_url = (page===null)?
+    `${process.env.REACT_APP_API_URL}/api/blog/search?s=${search_term}` :
+    `${process.env.REACT_APP_API_URL}/api/blog/search?p=${page}&s=${search_term}`
 
   const config = {
     headers: {
@@ -163,50 +68,26 @@ export const search_blog = (search_term) => async dispatch => {
     }
   };
 
-  try {
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/blog/search?s=${search_term}`, config);
-
-    if (res.status === 200) {
-      dispatch({
-        type: GET_SEARCH_BLOG_SUCCESS,
-        payload: res.data
-      });
-    } else {
-      dispatch({
-        type: GET_SEARCH_BLOG_FAIL
-      });
-    }
-  } catch (err) {
-    dispatch({
-      type: GET_SEARCH_BLOG_FAIL
-    });
-  }
+  return get_axios(api_url, config, GET_SEARCH_BLOG_SUCCESS, GET_SEARCH_BLOG_FAIL)
 };
 
-export const search_blog_page = (search_term, page) => async dispatch => {
+
+/*
+// Posts by Author
+*/
+export const get_blog_author_list = (page=null) => {
+  const api_url = (page===null)? 
+    `${process.env.REACT_APP_API_URL}/api/blog/author_list` :
+    `${process.env.REACT_APP_API_URL}/api/blog/author_list?p=${page}`
 
   const config = {
     headers: {
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Authorization': `JWT ${localStorage.getItem('access')}`
     }
   };
 
-  try {
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/blog/search?p=${page}&s=${search_term}`, config);
+  return get_axios(api_url, config, GET_AUTHOR_BLOG_LIST_SUCCESS, GET_AUTHOR_BLOG_LIST_FAIL)
+}
 
-    if (res.status === 200) {
-      dispatch({
-        type: GET_SEARCH_BLOG_SUCCESS,
-        payload: res.data
-      });
-    } else {
-      dispatch({
-        type: GET_SEARCH_BLOG_FAIL
-      });
-    }
-  } catch (err) {
-    dispatch({
-      type: GET_SEARCH_BLOG_FAIL
-    });
-  }
-};
+

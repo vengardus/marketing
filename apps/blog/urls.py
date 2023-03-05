@@ -5,5 +5,7 @@ urlpatterns = [
     path('list', PostListView.as_view()),
     path('bycategory', PostsListByCategoryView.as_view()),
     path('detail/<slug>', PostDetailView.as_view()),
-    path('search', PostSearchView.as_view())
+    path('search', PostSearchView.as_view()),
+
+    path('author_list', AuthorPostListView.as_view()),
 ]

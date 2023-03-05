@@ -7,23 +7,23 @@ function Page_2({
 }) {
 
     useEffect(() => {
-        window.scrollTo(0,0)
+        window.scrollTo(0, 0)
 
     }, [])
 
     return (
         <Layout>
-                
+
         </Layout>
     )
 }
 
 
 const mapStateToProps = state => ({
-    
+
 })
 
 
 export default connect(mapStateToProps, {
-    
-}) (Page_2)
+
+})(Page_2)
