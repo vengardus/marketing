@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { get_axios } from '../../../lib/axios';
+import { get_axios } from '../../../mylib/axios';
 import {
   GET_BLOG_LIST_SUCCESS,
   GET_BLOG_LIST_FAIL,

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { do_dispatch, get_axios, post_axios } from "../../../mylib/axios";
 import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
@@ -19,70 +20,43 @@ import {
   from './types'
 
 
+export const load_user = () => {
+  if (localStorage.getItem('access') === null)
+    return do_dispatch(USER_LOADED_FAIL);
 
-  export const load_user = () => async dispatch => {
-    if (localStorage.getItem('access')) {
-  
-        const config = {
-            headers: {
-                'Authorization': `JWT ${localStorage.getItem('access')}`,
-                'Accept': 'application/json'
-            }
-            // 'JWT' en Authorization tiene ese valor porque asi está definido en
-            // el back-end en settings: 
-            // SIMPLE_JWT = {
-            //    'AUTH_HEADER_TYPES': ('JWT', ),
-        };
-  
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/users/me/`, config);
-  
-            if (res.status === 200) {
-                dispatch({
-                    type: USER_LOADED_SUCCESS,
-                    payload: res.data
-                });
-                console.log('Logeado!!!!', res.data)
-            } else {
-                dispatch({
-                    type: USER_LOADED_FAIL
-                });
-            }
-        } catch (err) {
-            dispatch({
-                type: USER_LOADED_FAIL
-            });
-        }
-    } else {
-        dispatch({
-            type: USER_LOADED_FAIL
-        });
+  const api_url = `${process.env.REACT_APP_API_URL}/auth/users/me/`
+  const config = {
+    headers: {
+      'Authorization': `JWT ${localStorage.getItem('access')}`,
+      'Accept': 'application/json'
     }
+    // 'JWT' en Authorization tiene ese valor porque asi está definido en
+    // el back-end en settings: 
+    // SIMPLE_JWT = {
+    //    'AUTH_HEADER_TYPES': ('JWT', ),
   };
 
-export const login = (email, password) => async dispatch => {
-  dispatch({
-    type: SET_AUTH_LOADING
-  })
+  return get_axios(api_url, config, USER_LOADED_SUCCESS, USER_LOADED_FAIL)
+};
 
+export const login = (email, password) => async dispatch => {
+  const api_url = `${process.env.REACT_APP_API_URL}/auth/jwt/create/`
   const config = {
     headers: {
       'Content-Type': 'application/json'
     }
   }
-
   const body = JSON.stringify({
     email,
     password
   })
-
-
-  const route = 'auth/jwt/create/'
+  
+  dispatch({
+    type: SET_AUTH_LOADING
+  })
 
   try {
-    console.log('body', body)
-    console.log('URL', `${process.env.REACT_APP_API_URL}/${route}`)
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/${route}`, body, config)
+    const res = await axios.post(api_url, body, config)
 
     if (res.status === 200) {
       dispatch({
@@ -115,111 +89,57 @@ export const login = (email, password) => async dispatch => {
   }
 }
 
-export const check_authenticated = () => async dispatch => {
-  if (localStorage.getItem('access')) {
-    const config = {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
+export const check_authenticated = () => {
+  if (localStorage.getItem('access') === null)
+    return do_dispatch(AUTHENTICATED_FAIL)
+
+  const api_url = `${process.env.REACT_APP_API_URL}/auth/jwt/verify/`
+  const config = {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
     }
-
-    const body = JSON.stringify({
-      token: localStorage.getItem('access')
-    })
-
-    const route = 'auth/jwt/verify/'
-
-    try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/${route}`, body, config)
-      console.log(`${process.env.REACT_APP_API_URL}/${route}`)
-
-      if (res.status === 200) {
-        dispatch({
-          type: AUTHENTICATED_SUCCESS,
-        })
-      }
-      else {
-        dispatch({
-          type: AUTHENTICATED_FAIL
-        })
-      }
-    }
-    catch (err) {
-      dispatch({
-        type: AUTHENTICATED_FAIL
-      })
-    }
-
   }
-  else {
-    dispatch({
-      type: AUTHENTICATED_FAIL
-    })
-  }
+  const body = JSON.stringify({
+    token: localStorage.getItem('access')
+  })
+
+  return post_axios(api_url, body, config, AUTHENTICATED_SUCCESS, AUTHENTICATED_FAIL )
+
 }
 
-export const refresh = () => async dispatch => {
-  if (localStorage.getItem('refresh')) {
-    const config = {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
+
+export const refresh = () => {
+  if (localStorage.getItem('refresh') === null)
+    return do_dispatch(REFRESH_FAIL)
+
+  const api_url = `${process.env.REACT_APP_API_URL}/auth/jwt/refresh/`
+  const config = {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
     }
-
-    const body = JSON.stringify({
-      refresh: localStorage.getItem('refresh')
-    })
-
-    const route = 'auth/jwt/refresh/'
-
-    try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/${route}`, body, config)
-      console.log(`${process.env.REACT_APP_API_URL}/${route}`)
-
-      if (res.status === 200) {
-        dispatch({
-          type: REFRESH_SUCCESS,
-        })
-      }
-      else {
-        dispatch({
-          type: REFRESH_FAIL
-        })
-      }
-    }
-    catch (err) {
-      dispatch({
-        type: REFRESH_FAIL
-      })
-    }
-
   }
-  else {
-    dispatch({
-      type: REFRESH_FAIL
-    })
-  }
+  const body = JSON.stringify({
+    refresh: localStorage.getItem('refresh')
+  })
+
+  return post_axios(api_url, body, config, REFRESH_SUCCESS, REFRESH_FAIL)
 }
 
 export const reset_password = (email) => async dispatch => {
-
+  const api_url = `${process.env.REACT_APP_API_URL}/auth/jwt/reset_password/`
   const config = {
     headers: {
       'Content-Type': 'application/json'
     }
   }
-
   const body = JSON.stringify({
     email
   })
 
-  const route = 'auth/jwt/reset_password/'
-
   try {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/${route}`, body, config)
-    console.log(`${process.env.REACT_APP_API_URL}/${route}`)
+    const res = await axios.post(api_url, body, config)
 
     if (res.status === 204) {
       dispatch({
@@ -247,28 +167,24 @@ export const reset_password = (email) => async dispatch => {
       type: REMOVE_AUTH_LOADING
     })
   }
-
-
 }
 
 export const reset_password_confirm = (uid, token, new_password, re_new_password) => async dispatch => {
-
-  dispatch({
-    type: SET_AUTH_LOADING,
-  })
-
-
+  const api_url = `${process.env.REACT_APP_API_URL}/auth/jwt/reset_password_confirm/`
   const config = {
     headers: {
       'Content-Type': 'application/json'
     }
   }
-
   const body = JSON.stringify({
     uid,
     token,
     new_password,
     re_new_password
+  })
+
+  dispatch({
+    type: SET_AUTH_LOADING,
   })
 
   if (new_password !== re_new_password) {
@@ -280,12 +196,8 @@ export const reset_password_confirm = (uid, token, new_password, re_new_password
     })
   }
   else {
-
-    const route = 'auth/jwt/reset_password_confirm/'
-
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/${route}`, body, config)
-      console.log(`${process.env.REACT_APP_API_URL}/${route}`)
+      const res = await axios.post(api_url, body, config)
 
       if (res.status === 204) {
         dispatch({
@@ -313,16 +225,11 @@ export const reset_password_confirm = (uid, token, new_password, re_new_password
         type: REMOVE_AUTH_LOADING
       })
     }
-
   }
-
-
-
-
 }
 
 export const logout = () => dispatch => {
   dispatch({
-      type: LOGOUT
+    type: LOGOUT
   });
 };
